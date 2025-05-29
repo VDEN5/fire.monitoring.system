@@ -1,0 +1,47 @@
+.map {
+  width: 100%;
+  aspect-ratio: 3/2;
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.mark {
+  cursor: pointer;
+  transform: translate(-50%, -100%);
+  position: relative;
+  z-index: 1;
+
+  &__fire {
+    position: absolute;
+    left: 0;
+    top: -10px;
+  }
+
+  &__placemark {
+    position: relative;
+    z-index: 5;
+  }
+
+  &__popup {
+    cursor: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 300px;
+    box-shadow: 0px 0px 2px grey;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    z-index: 100;
+  }
+
+  &__image {
+    width: 60%;
+    aspect-ratio: 1/1;
+  }
+}
+
+
+.details {
+  text-decoration: none;
+}

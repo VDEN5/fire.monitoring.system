@@ -1,0 +1,142 @@
+.resultChainContainer {
+  width: 100%;
+  overflow-x: auto;
+  margin: 2rem 0;
+
+  .resultChain {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 12px rgba(255, 100, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    background: linear-gradient(to right, #fff8f0, #fff0e0);
+
+    .chainHeader {
+      background: linear-gradient(to right, #ff6b35, #ff8c42);
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+
+      th {
+        position: sticky;
+        top: 0;
+        padding: 20px 12px;
+        text-align: center;
+        text-transform: uppercase;
+        border-bottom: 2px solid #ff4d00;
+      }
+    }
+
+    .chainRow {
+      transition: all 0.3s ease;
+      text-align: center;
+
+      &:nth-child(odd) {
+        background-color: rgba(255, 235, 220, 0.5);
+      }
+
+      &:nth-child(even) {
+        background-color: rgba(255, 245, 235, 0.7);
+      }
+
+      &:hover {
+        background-color: rgba(255, 200, 150, 0.5) !important;
+        transform: translateX(2px);
+      }
+
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #ffddd0;
+        vertical-align: middle;
+      }
+    }
+
+    .smallImage,
+    .algorithmImage {
+      width: 80px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid #ffc7a6;
+      box-shadow: 0 2px 4px rgba(255, 100, 0, 0.1);
+    }
+
+    .algorithmContent {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: 10px;
+    }
+
+    .fireDetected {
+      color: #ff4500;
+      font-size: 1.5rem;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .noFire {
+      color: #6c757d;
+      font-size: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .detailsCell {
+      text-align: center;
+      padding: 12px;
+      border-bottom: 1px solid #ffddd0;
+    }
+
+    .detailsLink {
+      display: inline-block;
+      padding: 6px 12px;
+      background-color: #ff6b35;
+      color: white;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #ff8c42;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(255, 100, 0, 0.2);
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .resultChainContainer {
+    .resultChain {
+      .chainHeader {
+        th {
+          padding: 12px 8px;
+          font-size: 0.75rem;
+        }
+      }
+
+      .chainRow {
+        td {
+          padding: 8px;
+          font-size: 0.85rem;
+        }
+      }
+
+      .smallImage,
+      .algorithmImage {
+        width: 60px;
+        height: 40px;
+      }
+    }
+  }
+}
+
+.rowGap td {
+  height: 70px;
+  background-color: transparent;
+}

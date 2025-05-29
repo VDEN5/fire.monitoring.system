@@ -1,0 +1,36 @@
+@use "@styles/variables.scss" as *;
+
+.loader > path {
+  fill: $button-primary-text;
+}
+
+.primary {
+  &__default {
+    background-color: $button-primary-bg;
+    color: $button-primary-text;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 10px 20px;
+  }
+
+  &__default:hover {
+    background-color: $button-primary-bg-hover;
+    color: $button-primary-text-hover;
+  }
+
+  &__default:active {
+    background-color: $button-primary-bg-active;
+    color: $button-primary-text-active;
+  }
+
+  &__default:disabled {
+    background-color: $button-primary-bg-disabled;
+    color: $button-primary-text-disabled;
+  }
+
+  &__disabled {
+    background-color: $button-primary-bg-disabled;
+    color: $button-primary-text-disabled;
+  }
+}

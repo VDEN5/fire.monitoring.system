@@ -1,0 +1,91 @@
+$color-one: #D92B29;
+$color-two: #F5732A;
+$color-three: #F2B338;
+$color-four: #F5D549;
+
+$white: #fff;
+$black: #333;
+
+$shape-one: 79% 21% 64% 36% / 43% 61% 39% 57%;
+$shape-two: 23% 77% 66% 34% / 57% 72% 28% 43%;
+$shape-three: 78% 22% 63% 37% / 39% 27% 73% 61%;
+$shape-four: 35% 65% 78% 22% / 54% 50% 50% 46%;
+
+.fire {
+  width: 50px;
+  height: 50px;
+  
+  &__flame {
+    position: absolute;
+    width: 40%;
+    height: 100%;
+    background-color: $color-one;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-radius: $shape-one;
+    z-index: 0;
+    animation-name: fire;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    transition: ease 0.4s;
+
+    &:nth-of-type(2) {
+        width: 40%;
+        height: 80%;
+        border-radius: $shape-two;
+        background-color: $color-two;
+        transform: translate(50%, 10%) rotate(30deg);
+        opacity: 0.9;
+        z-index: 2;
+        animation-delay: 0.2s;
+    }
+    
+    &:nth-of-type(3) {
+      width: 40%;
+      height: 90%;
+      border-radius: $shape-three;
+      background-color: $color-three;
+      transform: translate(-50%, 10%) rotate(-30deg);
+      opacity: 0.8;
+      z-index: 1;
+      animation-delay: 0.4s;
+    }
+    
+    &:nth-of-type(4) {
+      width: 40%;
+      height: 70%;
+      border-radius: $shape-four;
+      background-color: $color-four;
+      opacity: 0.8;
+      z-index: 1;
+      animation-delay: 0.6s;
+    }
+  }
+}
+
+@keyframes fire {
+  0% {
+    border-radius: $shape-one;
+    background-color: $color-one;
+  }
+  25% {
+    border-radius: $shape-two;
+    background-color: $color-two;
+  }
+  50% {
+    border-radius: $shape-three;
+    background-color: $color-three;
+  }
+  75% {
+    border-radius: $shape-four;
+    background-color: $color-four;
+  }
+  100% {
+    border-radius: $shape-one;
+    background-color: $color-one;
+  }
+}
+
+

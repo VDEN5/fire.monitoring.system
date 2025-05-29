@@ -1,0 +1,18 @@
+@use '@fonts/Roboto/index.scss';
+@use "@styles/mixins.scss" as *;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0px;
+}
+
+.container {
+  padding: 0 10%;
+
+  @include respond-to('mobile') {
+    padding: 0 2%;
+  }
+}

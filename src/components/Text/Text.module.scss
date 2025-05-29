@@ -1,0 +1,82 @@
+@use '@styles/mixins.scss' as *;
+@use '@styles/variables.scss' as *;
+
+.default {
+  font-family: 'Roboto';
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+.view {
+  &_button {
+    @include text_params(400, 18px, 18px);
+  }
+
+  &_title {
+    @include text_params(700, 44px, 48px);
+  }
+
+  &_subtitle {
+    @include text_params(700, 32px, 32px);
+  }
+
+  &_p-20 {
+    @include text_params(400, 20px, 24px);
+  }
+
+  &_p-18 {
+    @include text_params(400, 18px, 22px);
+  }
+
+  &_p-16 {
+    @include text_params(400, 16px, 20px);
+  }
+
+  &_p-14 {
+    @include text_params(400, 14px, 18px);
+  }
+}
+
+.weight {
+  &_normal {
+    font-weight: $text-weight-normal;
+  }
+
+  &_medium {
+    font-weight: $text-weight-medium;
+  }
+
+  &_bold {
+    font-weight: $text-weight-bold;
+  }
+}
+
+.color {
+  &_primary {
+    color: $text-primary;
+  }
+
+  &_secondary {
+    color: $text-secondary;
+  }
+
+  &_accent {
+    color: $text-accent;
+  }
+
+  &_safety {
+    color: $text-safety;
+  }
+
+  &_danger {
+    color: $text-danger;
+  }
+}
+
+.lines {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

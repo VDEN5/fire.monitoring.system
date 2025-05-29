@@ -1,0 +1,41 @@
+@use '@styles/mixins.scss' as *;
+
+.inner {
+  padding-top: 50px;
+}
+
+.board {
+  gap: 30px;
+
+  @include respond-to('mobile') {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  @include respond-to('desktop') {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+  }
+}
+
+.mapParams__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 50px;
+}
+
+.mapParams__input {
+  outline: none;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.mapParams__submit {
+  align-self: flex-start;
+  padding: 8px 16px;
+  font-size: 14px;
+}
+

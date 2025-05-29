@@ -1,0 +1,114 @@
+.inner {
+  padding-top: 50px;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #ff6b35;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #d45a00;
+    text-decoration: underline;
+  }
+}
+
+.section {
+  margin-bottom: 2rem;
+
+  h2 {
+    color: #d45a00;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    border-bottom: 2px solid #ffd3b6;
+    padding-bottom: 4px;
+  }
+
+  p {
+    margin: 0.25rem 0;
+    font-size: 0.95rem;
+  }
+}
+
+.imageMain {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(255, 100, 0, 0.15);
+  border: 1px solid #ffd3b6;
+  margin-bottom: 30px;
+}
+
+.pixelGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.pixelItem {
+  flex: 1 1 220px;
+  background: #fff5ed;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ffe0cc;
+  box-shadow: 0 2px 4px rgba(255, 100, 0, 0.1);
+  text-align: center;
+
+  h3 {
+    margin: 0.5rem 0;
+    color: #ff6b35;
+    font-size: 1rem;
+  }
+
+  img {
+    width: 100%;
+    max-width: 240px;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid #ffc7a6;
+    box-shadow: 0 1px 3px rgba(255, 100, 0, 0.08);
+  }
+
+  .percent {
+    font-weight: bold;
+    color: #d45a00;
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+  }
+}
+
+.yoloSection {
+  img {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid #ffc7a6;
+    box-shadow: 0 2px 6px rgba(255, 100, 0, 0.12);
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin: 0.25rem 0;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .pixelGrid {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .imageMain {
+    max-width: 100%;
+  }
+
+  .yoloSection img {
+    max-width: 100%;
+  }
+}
