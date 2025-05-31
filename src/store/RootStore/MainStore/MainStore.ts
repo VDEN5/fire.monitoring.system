@@ -21,6 +21,7 @@ type PrivateFields =
 type ConnectionStatus = 'connected' | 'disconnected' | 'connecting';
 
 const LIMIT_FOR_RELOAD = 100;
+const WEBOSKET_SERVER = 'ws://localhost:8000';
 
 export default class MainStore {
   private _socket: WebSocket | null = null;
@@ -77,7 +78,7 @@ export default class MainStore {
   connect() {
     this._connectionStatus = 'connecting';
 
-    const socket = new WebSocket('ws://localhost:8000');
+    const socket = new WebSocket(WEBOSKET_SERVER);
 
     socket.addEventListener('open', () => {
       runInAction(() => {

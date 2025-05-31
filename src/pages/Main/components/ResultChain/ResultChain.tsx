@@ -88,7 +88,7 @@ const ResultChain: React.FC = () => {
                   <td className={styles.gridCell}>
                     <div className={styles.algorithmContent}>
                       <Text tag="div" weight="bold" view="p-20">
-                        {detItem.fire ? (
+                        {detItem.results.yolo.fireCount > 0 ? (
                           <Text color="safety">✓</Text>
                         ) : (
                           <Text color="danger">✗</Text>

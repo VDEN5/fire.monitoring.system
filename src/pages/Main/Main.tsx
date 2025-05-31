@@ -31,6 +31,9 @@ const Main: React.FC = () => {
   return (
     <div className="container">
       <div className={styles.inner}>
+        <Text className={styles.title} tag="div" view="p-20" color="danger">
+          Веб-ориентированная информационная система учёта данных аппаратных средств мониторинга лесных пожаров
+        </Text>
         <div className={styles.board}>
           <Map />
           <div className={styles.mapParams}>
@@ -57,9 +60,13 @@ const Main: React.FC = () => {
             </div>
 
             <form className={styles.mapParams__form} onSubmit={handleSubmit}>
-              <Text view='p-20'>Текущий радиус: {rootStore.main.radius} км</Text>
+              <Text view="p-20">
+                Текущий радиус: {rootStore.main.radius} км
+              </Text>
               <label className={styles.mapParams__label}>
-                <Text tag='div' view='p-16'>Введите радиус (км):</Text>
+                <Text tag="div" view="p-16">
+                  Введите радиус (км):
+                </Text>
                 <input
                   type="text"
                   maxLength={10}

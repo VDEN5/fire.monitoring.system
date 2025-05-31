@@ -196,3 +196,4 @@ const Map: React.FC = () => {
 };
 
 export default observer(Map);
+
