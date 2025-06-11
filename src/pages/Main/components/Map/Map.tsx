@@ -1,6 +1,5 @@
 import Placemark from '@components/icons/Placemark';
 import {
-  reactify,
   YMap,
   YMapDefaultSchemeLayer,
   YMapControls,
@@ -11,6 +10,7 @@ import {
   YMapScaleControl,
   YMapFeature,
   YMapControl,
+  reactify,
 } from '@lib/ymaps';
 import type {
   LngLat,
@@ -32,21 +32,11 @@ import { Link } from 'react-router';
 import { routes } from '@config/routes';
 import { getTimeNow } from '@config/utils';
 
-const DEFAULT_LOCATION_SETTINGS: Partial<YMapLocationRequest> = {
-  duration: 1000,
-  easing: 'ease-in-out',
-  zoom: 9,
-};
-
 const DEFAULT_CENTER: [number, number] = [37.619771, 55.754314];
 
 const Map: React.FC = () => {
-  const [activeCameras, setActiveCameras] = React.useState<string[]>([]);
-  const [location, setLocation] = React.useState<YMapLocationRequest>({
-    center: DEFAULT_CENTER,
-    ...DEFAULT_LOCATION_SETTINGS,
-  });
-  const [hasCentered, setHasCentered] = React.useState(false);
+  const [isCentered, setIsCentered] = React.useState<boolean>(false);
+  const [activeCamera, setActiveCamera] = React.useState<string | null>(null);
 
   const getCircleGeoJSON = (
     center: LngLat,
@@ -59,32 +49,33 @@ const Map: React.FC = () => {
   };
 
   const activeDet = rootStore.main.detections.at(-1);
-  const activeDetItem = activeDet?.data.find(
-    (det) => det.id === activeCameras[0]
-  );
+  const activeDetItem =
+    !activeDet || !activeCamera
+      ? null
+      : activeDet.data.find((det) => det.id === activeCamera);
 
-  React.useEffect(() => {
-    if (!hasCentered && activeDet) {
-      setLocation({
-        center: [
-          activeDet.centerCoords.longitude,
-          activeDet.centerCoords.latitude,
-        ],
-        ...DEFAULT_LOCATION_SETTINGS,
-      });
-      setHasCentered(true);
-    }
-  }, [activeDet, hasCentered]);
+  if (activeDet && !isCentered) {
+    setIsCentered(true);
+  }
+
+  const LOCATION: YMapLocationRequest = {
+    center: activeDet
+      ? [activeDet.centerCoords.longitude, activeDet.centerCoords.latitude]
+      : DEFAULT_CENTER,
+    duration: 1000,
+    easing: 'ease-in-out',
+    zoom: 9,
+  };
 
   return (
     <div className={styles.map}>
-      <YMap location={location}>
+      <YMap location={isCentered ? reactify.useDefault(LOCATION) : LOCATION}>
         <YMapDefaultSchemeLayer />
         <YMapDefaultFeaturesLayer />
         <YMapListener
           onClick={(obj) => {
             if (obj === undefined) {
-              setActiveCameras([]);
+              setActiveCamera(null);
             }
           }}
         />
@@ -97,7 +88,7 @@ const Map: React.FC = () => {
           <YMapScaleControl />
         </YMapControls>
 
-        {activeDetItem && (
+        {activeDetItem && !('error' in activeDetItem) && (
           <YMapControls position="top left">
             <YMapControl>
               <div className={styles.mark__popup}>
@@ -106,7 +97,8 @@ const Map: React.FC = () => {
                   src={activeDetItem.imageInfo.path}
                   alt=""
                 />
-                <Link className={styles.details}
+                <Link
+                  className={styles.details}
                   to={routes.result.create(
                     activeDet!.timestamp,
                     getTimeNow(activeDetItem.timestamp)
@@ -135,9 +127,7 @@ const Map: React.FC = () => {
                 </Text>
                 <Button
                   onClick={() => {
-                    setActiveCameras(
-                      activeCameras.filter((id) => activeDetItem.id !== id)
-                    );
+                    setActiveCamera(null);
                   }}
                 >
                   Скрыть
@@ -149,7 +139,7 @@ const Map: React.FC = () => {
 
         {activeDet?.data.map((det) => (
           <React.Fragment key={det.id}>
-            {activeCameras.includes(det.id) && (
+            {!('error' in det) && det.id === activeCamera && (
               <YMapFeature
                 geometry={getCircleGeoJSON(
                   [det.coordinates.longitude, det.coordinates.latitude],
@@ -163,25 +153,25 @@ const Map: React.FC = () => {
               />
             )}
             <YMapMarker
-              coordinates={reactify.useDefault([
+              coordinates={[
                 det.coordinates.longitude,
                 det.coordinates.latitude,
-              ])}
+              ]}
               draggable={false}
               onClick={() => {
-                if (!activeCameras.includes(det.id)) {
-                  setActiveCameras([det.id]);
+                if (activeCamera !== det.id) {
+                  setActiveCamera(det.id);
                 }
               }}
             >
               <div className={styles.mark}>
-                {det.fire && (
+                {!('error' in det) && det.fire && (
                   <div className={styles.mark__fire}>
                     <Fire />
                   </div>
                 )}
                 <Placemark
-                  fire={det.fire}
+                  fire={'error' in det ? 'nodata' : det.fire ? 'yes' : 'no'}
                   className={styles.mark__placemark}
                   width={50}
                   height={50}
@@ -196,4 +186,3 @@ const Map: React.FC = () => {
 };
 
 export default observer(Map);
-

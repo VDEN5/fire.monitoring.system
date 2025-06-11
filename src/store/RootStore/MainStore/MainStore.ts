@@ -121,9 +121,7 @@ export default class MainStore {
       return;
     }
     if (this._socket && this._connectionStatus === 'connected') {
-
       this._socket.send(JSON.stringify({ radius: radiusInt }));
-      console.log(this._form.radius);
 
       runInAction(() => {
         this._radiusSentMessageVisible = true;
