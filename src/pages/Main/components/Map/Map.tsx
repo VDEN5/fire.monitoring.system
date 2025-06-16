@@ -31,6 +31,7 @@ import * as turf from '@turf/turf';
 import { Link } from 'react-router';
 import { routes } from '@config/routes';
 import { getTimeNow } from '@config/utils';
+import Loader from '@components/Loader';
 
 const DEFAULT_CENTER: [number, number] = [37.619771, 55.754314];
 
@@ -69,7 +70,16 @@ const Map: React.FC = () => {
 
   return (
     <div className={styles.map}>
-      <YMap location={isCentered ? reactify.useDefault(LOCATION) : LOCATION}>
+      {!rootStore.main.isLoaded && (
+        <div className={styles.cover_block}>
+          <Loader className={styles.cover_block__loader}></Loader>
+        </div>
+      )}
+
+      <YMap
+        className={styles.map_block}
+        location={isCentered ? reactify.useDefault(LOCATION) : LOCATION}
+      >
         <YMapDefaultSchemeLayer />
         <YMapDefaultFeaturesLayer />
         <YMapListener
@@ -88,43 +98,51 @@ const Map: React.FC = () => {
           <YMapScaleControl />
         </YMapControls>
 
-        {activeDetItem && !('error' in activeDetItem) && (
+        {activeDetItem && (
           <YMapControls position="top left">
             <YMapControl>
               <div className={styles.mark__popup}>
-                <img
-                  className={styles.mark__image}
-                  src={activeDetItem.imageInfo.path}
-                  alt=""
-                />
-                <Link
-                  className={styles.details}
-                  to={routes.result.create(
-                    activeDet!.timestamp,
-                    getTimeNow(activeDetItem.timestamp)
-                  )}
-                >
-                  <Text tag="div" color="danger">
-                    Подробнее
-                  </Text>
-                </Link>
+                {!('error' in activeDetItem) && (
+                  <>
+                    <img
+                      className={styles.mark__image}
+                      src={activeDetItem.imageInfo.path}
+                      alt=""
+                    />
+                    <Link
+                      className={styles.details}
+                      to={routes.result.create(
+                        activeDet!.timestamp,
+                        getTimeNow(activeDetItem.timestamp)
+                      )}
+                    >
+                      <Text tag="div" color="danger">
+                        Подробнее
+                      </Text>
+                    </Link>
+                  </>
+                )}
+
                 <Text tag="div">ID: {activeDetItem.id}</Text>
                 <Text tag="div">
                   Координаты: ({activeDetItem.coordinates.latitude},{' '}
                   {activeDetItem.coordinates.longitude})
                 </Text>
                 <Text>
-                  {activeDetItem.fireCountWithinRadius} локаций в огне из{' '}
-                  {activeDetItem.totalCountWithinRadius} в радиусе{' '}
-                  {rootStore.main.radius} км
+                  {activeDetItem.fireCountWithinRadius} из{' '}
+                  {activeDetItem.totalCountWithinRadius} камер обнаружили огонь
+                  в радиусе {rootStore.main.radius} км
                 </Text>
-                <Text
-                  tag="div"
-                  color={activeDetItem.fire ? 'danger' : 'safety'}
-                  weight={activeDetItem.fire ? 'bold' : 'normal'}
-                >
-                  Огонь: {activeDetItem.fire ? 'Обнаружен' : 'Не обнаружен'}
-                </Text>
+                {!('error' in activeDetItem) && (
+                  <Text
+                    tag="div"
+                    color={activeDetItem.fire ? 'danger' : 'safety'}
+                    weight={activeDetItem.fire ? 'bold' : 'normal'}
+                  >
+                    Огонь: {activeDetItem.fire ? 'Обнаружен' : 'Не обнаружен'}
+                  </Text>
+                )}
+
                 <Button
                   onClick={() => {
                     setActiveCamera(null);
@@ -139,7 +157,7 @@ const Map: React.FC = () => {
 
         {activeDet?.data.map((det) => (
           <React.Fragment key={det.id}>
-            {!('error' in det) && det.id === activeCamera && (
+            {det.id === activeCamera && (
               <YMapFeature
                 geometry={getCircleGeoJSON(
                   [det.coordinates.longitude, det.coordinates.latitude],

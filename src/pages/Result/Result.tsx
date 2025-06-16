@@ -97,7 +97,7 @@ const Result: React.FC = () => {
           <Text tag="h2">YOLO результаты</Text>
           <img src={yolo.path} alt="YOLO" className={styles.imageMain} />
           <Text>
-            <strong>Количество очагов:</strong> {yolo.fireCount}
+            <strong>Количество распознанных объектов:</strong> {yolo.fireCount}
           </Text>
           <Text>
             <strong>Максимальная вероятность: </strong>

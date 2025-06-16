@@ -1,0 +1,16 @@
+.default {
+  animation-duration: 0.5s;
+  animation-name: rotation;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

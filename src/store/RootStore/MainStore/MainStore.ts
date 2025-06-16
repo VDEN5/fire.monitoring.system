@@ -45,6 +45,7 @@ export default class MainStore {
       detections: computed,
       connectionStatus: computed,
       radius: computed,
+      isLoaded: computed,
       connect: action,
       setRadius: action,
     });
@@ -69,6 +70,10 @@ export default class MainStore {
 
   get radiusSentMessageVisible() {
     return this._radiusSentMessageVisible;
+  }
+
+  get isLoaded() {
+    return this._detections.at(-1) ? true : false;
   }
 
   setRadius(val: string) {

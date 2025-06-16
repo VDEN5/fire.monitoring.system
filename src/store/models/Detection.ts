@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 // 1. ImageInfo
 export const ImageInfoSchema = z.object({
@@ -43,6 +43,8 @@ const DetectionItemBase = z.object({
     latitude: z.number(),
     longitude: z.number(),
   }),
+  fire_count_within_radius: z.number(),
+  total_count_within_radius: z.number(),
 });
 
 // 6. Full (успешный) вариант
@@ -51,8 +53,6 @@ const DetectionItemSuccess = DetectionItemBase.extend({
   results: ResultsSchema,
   timestamp: z.string(),
   fire: z.boolean(),
-  fire_count_within_radius: z.number(),
-  total_count_within_radius: z.number(),
 });
 
 // 7. Ошибочный вариант
@@ -69,6 +69,30 @@ export const DetectionItemSchema = z.union([
 export type DetectionItemApi = z.input<typeof DetectionItemSchema>;
 export type DetectionItemModel = z.output<typeof DetectionItemSchema>;
 
+const LastValidMinimalSchema = z.object({
+  id: z.string(),
+  coordinates: z.object({
+    latitude: z.number(),
+    longitude: z.number(),
+  }),
+  connect: z.boolean(),
+});
+
+const LastValidFullSchema = LastValidMinimalSchema.extend({
+  image_info: ImageInfoSchema,
+  results: ResultsSchema,
+  timestamp: z.string(),
+  fire: z.boolean(),
+});
+
+export const LastValidItemSchema = z.union([
+  LastValidFullSchema,
+  LastValidMinimalSchema,
+]);
+
+export const LastValidStateSchema = z.array(LastValidItemSchema);
+export type LastValidStateModel = z.output<typeof LastValidStateSchema>;
+
 // 9. Основной ответ
 export const DetectionApiSchema = z
   .object({
@@ -77,19 +101,21 @@ export const DetectionApiSchema = z
       radius_km: z.number(),
     }),
     timestamp: z.number(),
-    center_coordinates: z
-      .object({
-        latitude: z.number(),
-        longitude: z.number(),
-      })
+    center_coordinates: z.object({
+      latitude: z.number(),
+      longitude: z.number(),
+    }),
+    last_valid_state: LastValidStateSchema,
   })
   .transform((data) => ({
     data: data.data.map((item) => {
-      if ("error" in item) {
+      if ('error' in item) {
         return {
           id: item.id,
           coordinates: item.coordinates,
           error: item.error,
+          fireCountWithinRadius: item.fire_count_within_radius,
+          totalCountWithinRadius: item.total_count_within_radius,
         };
       }
 
@@ -141,6 +167,59 @@ export const DetectionApiSchema = z
     centerCoords: data.center_coordinates,
     radiusKm: data.radius_info.radius_km,
     timestamp: data.timestamp,
+    lastValidState: data.last_valid_state.map((item) => {
+      if ('image_info' in item && 'results' in item) {
+        return {
+          id: item.id,
+          coordinates: item.coordinates,
+          connect: item.connect,
+          imageInfo: {
+            name: item.image_info.name,
+            path: item.image_info.path,
+            type: item.image_info.type,
+          },
+          results: {
+            pixels: {
+              closed: {
+                path: item.results.pixels.closed.path,
+                whitePercentage: item.results.pixels.closed.white_percentage,
+              },
+              dilated: {
+                path: item.results.pixels.dilated.path,
+                whitePercentage: item.results.pixels.dilated.white_percentage,
+              },
+              eroded: {
+                path: item.results.pixels.eroded.path,
+                whitePercentage: item.results.pixels.eroded.white_percentage,
+              },
+              opened: {
+                path: item.results.pixels.opened.path,
+                whitePercentage: item.results.pixels.opened.white_percentage,
+              },
+              openedClosed: {
+                path: item.results.pixels.opened_closed.path,
+                whitePercentage:
+                  item.results.pixels.opened_closed.white_percentage,
+              },
+            },
+            yolo: {
+              fireCount: item.results.yolo.fire_count,
+              maxProb: item.results.yolo.max_prob,
+              meanProb: item.results.yolo.mean_prob,
+              path: item.results.yolo.path,
+            },
+          },
+          timestamp: item.timestamp,
+          fire: item.fire,
+        };
+      } else {
+        return {
+          id: item.id,
+          coordinates: item.coordinates,
+          connect: item.connect,
+        };
+      }
+    }),
   }));
 
 // Типы
