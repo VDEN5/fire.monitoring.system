@@ -6,6 +6,28 @@ import styles from './Result.module.scss';
 import Text from '@components/Text';
 import Button from '@components/Button';
 
+type DetectionItem = {
+  id: string;
+  coordinates: { latitude: number; longitude: number };
+  timestamp: string;
+  imageInfo: { path: string; name: string };
+  results: {
+    pixels: {
+      closed: { path: string; whitePercentage: number };
+      dilated: { path: string; whitePercentage: number };
+      eroded: { path: string; whitePercentage: number };
+      opened: { path: string; whitePercentage: number };
+      openedClosed: { path: string; whitePercentage: number };
+    };
+    yolo: {
+      path: string;
+      fireCount: number;
+      maxProb: number;
+      meanProb: number;
+    };
+  };
+};
+
 const Result: React.FC = () => {
   const params = useParams();
   const detId = Number(params.detId);
@@ -15,33 +37,52 @@ const Result: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const detections = rootStore.main.detections;
+  // Получаем все детекции одним массивом
+  const allDetections = [
+    rootStore.main.detections,
+    rootStore.main.detections1,
+    rootStore.main.detections2
+  ];
 
-  if (detections.length === 0) {
+  // Проверяем, что все массивы детекций не пустые
+  if (allDetections.some(detections => detections.length === 0)) {
     return <Navigate to={routes.main.create()} replace />;
   }
 
-  const detection = detections.find((d) => d.timestamp === detId);
-  if (!detection) {
+  // Находим нужные детекции
+  const detections = allDetections.map(detections => 
+    detections.find(d => d.timestamp === detId)
+  );
+
+  if (detections.some(det => !det)) {
     return <Navigate to={routes.main.create()} replace />;
   }
 
-  const detItem = detection.data.find((item) => {
-    const itemTime = new Date(item.timestamp).getTime();
-    return itemTime === detCameraId;
-  });
+  // Находим конкретные элементы детекций
+  const findDetItem = (det: { data: any[] }) => 
+    det.data.find(item => new Date(item.timestamp).getTime() === detCameraId);
 
-  if (!detItem) {
+  const detItems = detections.map(findDetItem);
+
+  if (detItems.some(item => !item)) {
     return <Navigate to={routes.main.create()} replace />;
   }
 
+  // Используем первый элемент для отображения (как в оригинале)
+  const [detItem] = detItems;
   const {
     imageInfo,
     results: { pixels, yolo },
     timestamp,
-  } = detItem;
+  } = detItem as DetectionItem;
 
-  const { closed, dilated, eroded, opened, openedClosed } = pixels;
+  const pixelOperations = [
+    { title: 'Дилатация', data: pixels.dilated },
+    { title: 'Эрозия', data: pixels.eroded },
+    { title: 'Открытие', data: pixels.opened },
+    { title: 'Закрытие', data: pixels.closed },
+    { title: 'Открытие + Закрытие', data: pixels.openedClosed },
+  ];
 
   return (
     <div className="container">
@@ -75,13 +116,7 @@ const Result: React.FC = () => {
         <div className={styles.section}>
           <Text tag="h2">Обработка изображения (Pixel operations)</Text>
           <div className={styles.pixelGrid}>
-            {[
-              { title: 'Дилатация', data: dilated },
-              { title: 'Эрозия', data: eroded },
-              { title: 'Открытие', data: opened },
-              { title: 'Закрытие', data: closed },
-              { title: 'Открытие + Закрытие', data: openedClosed },
-            ].map(({ title, data }) => (
+            {pixelOperations.map(({ title, data }) => (
               <div className={styles.pixelItem} key={title}>
                 <Text tag="h3">{title}</Text>
                 <img src={data.path} alt={title} />
