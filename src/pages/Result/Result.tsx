@@ -40,8 +40,6 @@ const Result: React.FC = () => {
   // Получаем все детекции одним массивом
   const allDetections = [
     rootStore.main.detections,
-    rootStore.main.detections1,
-    rootStore.main.detections2
   ];
 
   // Проверяем, что все массивы детекций не пустые

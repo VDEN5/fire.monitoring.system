@@ -51,8 +51,6 @@ const ResultChain: React.FC = () => {
   // Объединяем все детекции в один массив для обработки
   const allDetections = [
     { data: rootStore.main.detections, name: 'detections' },
-    { data: rootStore.main.detections1, name: 'detections1' },
-    { data: rootStore.main.detections2, name: 'detections2' }
   ];
 
   // Рендер строки таблицы для одного элемента детекции

@@ -28,15 +28,15 @@ type ConnectionStatus = 'connected' | 'disconnected' | 'connecting';
 
 const LIMIT_FOR_RELOAD = 100;
 const WEB_SOCKET_SERVERS = [
-  'ws://localhost:8000',
-  'ws://localhost:8001',
-  'ws://localhost:8002'
+  // 'ws://localhost:8000',
+  'ws://localhost:8004',
+  // 'ws://localhost:8002'
 ] as const;
 
 export default class MainStore {
   private _sockets: [WebSocket | null, WebSocket | null, WebSocket | null] = [null, null, null];
   private _connectionStatuses: ConnectionStatus[] = ['disconnected', 'disconnected', 'disconnected'];
-  private _detectionsGroups: DetectionModel[][] = [[], [], []];
+  private _detectionsGroups: DetectionModel[][] = [[]];
   private _radius = 10;
   private _radiusSentMessageVisible = false;
   private _form = { radius: '' };
@@ -104,6 +104,7 @@ export default class MainStore {
 
       socket.addEventListener('message', (evt) => {
         const normData = normalizeDetection(JSON.parse(evt.data));
+        console.log(normData)
         if (normData) {
           runInAction(() => {
             this._detectionsGroups[index].push(normData);

@@ -53,16 +53,6 @@ const Map: React.FC = () => {
       activeCamera: activeCamera,
       setActiveCamera: setActiveCamera,
     },
-    {
-      detections: rootStore.main.detections1,
-      activeCamera: activeCamera1,
-      setActiveCamera: setActiveCamera1,
-    },
-    {
-      detections: rootStore.main.detections2,
-      activeCamera: activeCamera2,
-      setActiveCamera: setActiveCamera2,
-    },
   ];
 
   const getCircleGeoJSON = (
